@@ -1,0 +1,90 @@
+{% extends "base.html" %}
+{% block body %}
+<div class="container">
+    <h1>Propojovací stolky</h1>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Číslo stolku</th>
+                <th>Název akivity</th>
+                <th>Podrobnější popisek</th>
+                <th>Vaše jméno</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for i in range(max_tables) %}
+            <tr>
+                <td>
+                    {{ i+1 }}
+                </td>
+                <td>
+                    <input class="form-control table-control" data-id="{{i}}" data-type="title" type="text" name="title-{{i}}" value="{{tables.get(i).title}}">
+                </td>
+                <td>
+                    <textarea class="form-control table-control" data-id="{{i}}" data-type="description" name="description-{{i}}" cols="30" rows="1">{{ tables.get(i).description }}</textarea>
+                </td>
+                <td>
+                    <input type="text" class="form-control table-control" data-id="{{i}}" data-type="name" name="name-{{i}}" value="{{tables.get(i).name}}">
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}
+{% block scripts %}
+<script>
+    var socket = io();
+    socket.on('connect', () => {
+        let clientId = socket.id;
+        console.log(clientId);
+        
+        socket.on( 'lock-table', ( data ) => {
+            if ( data.clientId != clientId ) {
+                document.querySelectorAll( '.table-control[data-id="' + data.tableId + '"]' ).forEach(( el ) => {
+                    el.disabled = true;
+                });
+            }
+        });
+        socket.on( 'unlock-table', ( data ) => {
+            if ( data.clientId != clientId ) {
+                document.querySelectorAll( '.table-control[data-id="' + data.tableId + '"]' ).forEach(( el ) => {
+                    el.disabled = false;
+                });
+            }
+        });
+        socket.on( 'update-table', ( data ) => {
+            if ( data.clientId != clientId ) {
+                let el = document.querySelector( '.table-control[data-id="' + data.tableId + '"][data-type="' + data.type + '"]' );
+                el.value = data.value;
+            }
+        });
+
+        document.querySelectorAll( '.table-control' ).forEach(( el ) => {
+            el.addEventListener( 'focus', ( e ) => {
+                let el = e.srcElement;
+                socket.emit('lock-table', {
+                    tableId: el.getAttribute('data-id'),
+                    clientId: clientId
+                });
+            });
+        });
+        document.querySelectorAll( '.table-control' ).forEach(( el ) => {
+            el.addEventListener( 'focusout', ( e ) => {
+                let el = e.srcElement;
+                socket.emit('update-table', {
+                    clientId: clientId,
+                    tableId: el.getAttribute('data-id'),
+                    type: el.getAttribute('data-type'),
+                    value: el.value
+                });
+                socket.emit('unlock-table', {
+                    tableId: el.getAttribute('data-id'),
+                    clientId: clientId
+                });
+            });
+        });
+    });
+    
+</script>
+{% endblock %}

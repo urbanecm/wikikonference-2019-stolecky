@@ -1,0 +1,12 @@
+flask
+pyyaml
+requests
+simplejson
+Flask-JSONLocale
+Flask-SQLAlchemy
+SQLAlchemy-Utils
+Flask-Migrate
+flask-mwoauth
+mwoauth==0.3.2
+flask-socketio
+mysqlclient
