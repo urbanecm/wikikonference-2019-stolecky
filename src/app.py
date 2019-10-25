@@ -25,6 +25,7 @@ from flask_migrate import Migrate
 from flask_socketio import SocketIO, emit
 
 app = Flask(__name__, static_folder='../static')
+application = app
 
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
