@@ -1,3 +1,4 @@
 SECRET_KEY: something truly secret
 DEBUG: True
 SQLALCHEMY_DATABASE_URI: mysql://root:password@localhost/wikikonference_2019_stolecky
+SQLALCHEMY_TRACK_MODIFICATIONS: False
