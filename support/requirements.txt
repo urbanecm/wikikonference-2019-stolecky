@@ -10,4 +10,3 @@ flask-mwoauth
 mwoauth==0.3.2
 flask-socketio
 mysqlclient
-eventlet
