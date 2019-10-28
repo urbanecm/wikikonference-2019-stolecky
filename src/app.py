@@ -27,6 +27,12 @@ from flask_socketio import SocketIO, emit
 app = Flask(__name__, static_folder='../static')
 application = app
 
+# Load configuration from YAML file
+__dir__ = os.path.dirname(__file__)
+app.config.update(
+    yaml.safe_load(open(os.path.join(__dir__, os.environ.get(
+        'FLASK_CONFIG_FILE', 'config.yaml')))))
+
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
 socketio = SocketIO(app)
@@ -38,11 +44,6 @@ class Table(db.Model):
     description = db.Column(db.Text, default='')
     name = db.Column(db.String(255), default='')
 
-# Load configuration from YAML file
-__dir__ = os.path.dirname(__file__)
-app.config.update(
-    yaml.safe_load(open(os.path.join(__dir__, os.environ.get(
-        'FLASK_CONFIG_FILE', 'config.yaml')))))
 
 @app.route('/')
 def index():
