@@ -36,7 +36,9 @@ app.config.update(
 
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
-socketio = SocketIO(app)
+socketio = SocketIO(app, cors_allowed_origins=[
+    'https://stolecky.wikikonference.cz'
+])
 
 class Table(db.Model):
     id = db.Column(db.Integer, primary_key=True)
