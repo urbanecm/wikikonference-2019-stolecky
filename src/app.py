@@ -80,4 +80,4 @@ def on_update_table(json):
     db.session.commit()
 
 if __name__ == '__main__':
-    socketio.run(app)
+    socketio.run(app, port=8000)
