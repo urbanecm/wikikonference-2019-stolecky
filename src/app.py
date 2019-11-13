@@ -54,7 +54,7 @@ def index():
     known_tables = {}
     for table in tables:
         known_tables[table.number] = table
-    return render_template('index.html', max_tables=20, tables=known_tables)
+    return render_template('index.html', max_tables=7, tables=known_tables)
 
 @socketio.on('lock-table')
 def on_lock_table(json):
